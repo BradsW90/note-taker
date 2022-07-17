@@ -50,14 +50,13 @@ const deleteNote = (id) =>
     },
   });
 
-const renderActiveNote = () => {
-  hide(saveNoteBtn);
-
+const renderActiveNote = (activeNote) => {
   if (activeNote.id) {
     noteTitle.setAttribute("readonly", true);
     noteText.setAttribute("readonly", true);
     noteTitle.value = activeNote.title;
     noteText.value = activeNote.text;
+    //console.log("should be in active note");
   } else {
     noteTitle.removeAttribute("readonly");
     noteText.removeAttribute("readonly");
@@ -66,7 +65,12 @@ const renderActiveNote = () => {
   }
 };
 
-const handleNoteSave = () => {
+const handleNoteSave = (note) => {
+  const idList = [];
+  note.forEach((id) => {
+    idList.push(id.id);
+  });
+
   const newNote = {
     title: noteTitle.value,
     text: noteText.value,
@@ -99,13 +103,16 @@ const handleNoteDelete = (e) => {
 const handleNoteView = (e) => {
   e.preventDefault();
   activeNote = JSON.parse(e.target.parentElement.getAttribute("data-note"));
-  renderActiveNote();
+  //console.log(activeNote);
+  renderActiveNote(activeNote);
 };
 
 // Sets the activeNote to and empty object and allows the user to enter a new note
 const handleNewNoteView = (e) => {
   activeNote = {};
-  renderActiveNote();
+  activeNote.id = null;
+
+  renderActiveNote(activeNote);
 };
 
 const handleRenderSaveBtn = () => {
@@ -118,6 +125,8 @@ const handleRenderSaveBtn = () => {
 
 // Render the list of note titles
 const renderNoteList = async (notes) => {
+  hide(saveNoteBtn);
+
   let jsonNotes = await notes.json();
   if (window.location.pathname === "/notes") {
     noteList.forEach((el) => (el.innerHTML = ""));
@@ -172,6 +181,7 @@ const renderNoteList = async (notes) => {
 
 // Gets notes from the db and renders them to the sidebar
 const getAndRenderNotes = () => getNotes().then(renderNoteList);
+const getAndSaveNote = () => getNotes().then(handleNoteSave);
 
 if (window.location.pathname === "/notes") {
   saveNoteBtn.addEventListener("click", handleNoteSave);
