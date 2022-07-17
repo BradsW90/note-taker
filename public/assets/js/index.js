@@ -66,25 +66,36 @@ const renderActiveNote = (activeNote) => {
 };
 
 const handleNoteSave = async (note) => {
+  //waits for promise to be filled
   let currentNotes = await note.json();
+
+  //empty id container
   const idList = [];
+
+  //grabs all current used ids
   currentNotes.forEach((id) => {
     idList.push(parseInt(id.id));
   });
 
+  //sets id variable to check for any unused ids
   let newId = 0;
 
+  //checks list for id till newId is not used
   while (idList.includes(newId)) {
     newId += 1;
   }
 
+  //new note object
   const newNote = {
     title: noteTitle.value,
     text: noteText.value,
     id: newId.toString(),
   };
 
+  //setting activeNote.id to null for page reset
   activeNote.id = null;
+
+  //saves note and updates page
   saveNote(newNote).then(() => {
     getAndRenderNotes();
     renderActiveNote(activeNote);
@@ -96,13 +107,18 @@ const handleNoteDelete = (e) => {
   // Prevents the click listener for the list from being called when the button inside of it is clicked
   e.stopPropagation();
 
+  //gets delete button target
   const note = e.target;
+
+  //grabs entire note
   const noteId = JSON.parse(note.parentElement.getAttribute("data-note")).id;
 
+  //updates active note if note is being displayed
   if (activeNote.id === noteId) {
     activeNote.id = null;
   }
 
+  //deletes note and updates page
   deleteNote(noteId).then(() => {
     getAndRenderNotes();
     renderActiveNote(activeNote);

@@ -1,27 +1,7 @@
 [
   {
-    "title": "Test Title",
-    "text": "Test text",
+    "title": "Click on Me!",
+    "text": "I can be Deleted!!!",
     "id": "0"
-  },
-  {
-    "title": "Mod 11 Challenge",
-    "text": "Finish Mod 11 challenge",
-    "id": "1"
-  },
-  {
-    "title": "test note",
-    "text": "note testing",
-    "id": "2"
-  },
-  {
-    "title": "test two",
-    "text": "test again",
-    "id": "3"
-  },
-  {
-    "title": "again",
-    "text": "once more",
-    "id": "4"
   }
 ]
