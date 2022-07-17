@@ -65,19 +65,29 @@ const renderActiveNote = (activeNote) => {
   }
 };
 
-const handleNoteSave = (note) => {
+const handleNoteSave = async (note) => {
+  let currentNotes = await note.json();
   const idList = [];
-  note.forEach((id) => {
-    idList.push(id.id);
+  currentNotes.forEach((id) => {
+    idList.push(parseInt(id.id));
   });
+
+  let newId = 0;
+
+  while (idList.includes(newId)) {
+    newId += 1;
+  }
 
   const newNote = {
     title: noteTitle.value,
     text: noteText.value,
+    id: newId.toString(),
   };
+
+  activeNote.id = null;
   saveNote(newNote).then(() => {
     getAndRenderNotes();
-    renderActiveNote();
+    renderActiveNote(activeNote);
   });
 };
 
@@ -184,7 +194,7 @@ const getAndRenderNotes = () => getNotes().then(renderNoteList);
 const getAndSaveNote = () => getNotes().then(handleNoteSave);
 
 if (window.location.pathname === "/notes") {
-  saveNoteBtn.addEventListener("click", handleNoteSave);
+  saveNoteBtn.addEventListener("click", getAndSaveNote);
   newNoteBtn.addEventListener("click", handleNewNoteView);
   noteTitle.addEventListener("keyup", handleRenderSaveBtn);
   noteText.addEventListener("keyup", handleRenderSaveBtn);
